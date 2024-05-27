@@ -10,37 +10,26 @@
 ---@type BP_FirstPersonPlayerController_C
 local M = UnLua.Class()
 
---function M:Initialize(Initializer)
---end
+local BindAction = UnLua.EnhancedInput.BindAction
 
--- function M:UserConstructionScript()
--- end
-
-function M:ReceiveBeginPlay()
-    ---@type UEnhancedInputLocalPlayerSubsystem
-    local subsystem = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubsystem(self, UE.UEnhancedInputLocalPlayerSubsystem)
-    if subsystem then
-        subsystem:AddMappingContext(self.InputMappingContext, 0, nil)
-    end
-end
-
--- function M:ReceiveEndPlay()
--- end
-
---function M:ReceiveTick(DeltaSeconds)
---end
-
--- function M:ReceiveAnyDamage(Damage, DamageType, InstigatedBy, DamageCauser)
--- end
-
--- function M:ReceiveActorBeginOverlap(OtherActor)
--- end
-
--- function M:ReceiveActorEndOverlap(OtherActor)
--- end
+BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Jump', "Started", M.Jump)
+BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Jump', "Completed", M.StopJumping)
+BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Move', "Triggered", M.Move)
+BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Look', "Triggered", M.Look)
 
 ---@type BPI_PlayerCharacter_C
 local BPI_PlayerCharacter = UE.UClass.Load("/Game/Blueprints/Interfaces/Player/BPI_PlayerCharacter.BPI_PlayerCharacter_C")
+
+function M:ReceiveBeginPlay()
+    ---@type UEnhancedInputLocalPlayerSubsystem
+    local Subsystem = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubsystem(self, UE.UEnhancedInputLocalPlayerSubsystem)
+    if Subsystem then
+        Subsystem:AddMappingContext(self.InputMappingContext, 0, nil)
+    end
+end
+
+--function M:ReceiveTick(DeltaSeconds)
+--end
 
 function M:Move(value)
     if self.Pawn then
@@ -65,12 +54,5 @@ function M:StopJumping()
         BPI_PlayerCharacter.OnStopJumping(self.Pawn)
     end
 end
-
-local BindAction = UnLua.EnhancedInput.BindAction
-
-BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Jump', "Started", M.Jump)
-BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Jump', "Completed", M.StopJumping)
-BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Move', "Triggered", M.Move)
-BindAction(M, '/Game/FirstPerson/Input/Actions/IA_Look', "Triggered", M.Look)
 
 return M
