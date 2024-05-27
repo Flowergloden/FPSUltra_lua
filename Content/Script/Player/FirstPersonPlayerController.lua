@@ -16,8 +16,13 @@ local M = UnLua.Class()
 -- function M:UserConstructionScript()
 -- end
 
---function M:ReceiveBeginPlay()
---end
+function M:ReceiveBeginPlay()
+    ---@type UEnhancedInputLocalPlayerSubsystem
+    local subsystem = UE.USubsystemBlueprintLibrary.GetLocalPlayerSubsystem(self, UE.UEnhancedInputLocalPlayerSubsystem)
+    if subsystem then
+        subsystem:AddMappingContext(self.InputMappingContext, 0, nil)
+    end
+end
 
 -- function M:ReceiveEndPlay()
 -- end
